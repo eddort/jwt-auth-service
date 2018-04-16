@@ -2,5 +2,6 @@
 	"presets": [
 		"backpack-core/babel",
 		"stage-0"
-	]
+	],
+	"plugins": ["transform-decorators-legacy"]
 }
