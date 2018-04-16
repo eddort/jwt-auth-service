@@ -9,6 +9,8 @@ import passportJWT from 'passport-jwt'
 import User from './model/user'
 import Router from './routes'
 
+const { SERVICE_PORT } = process.env
+
 const ExtractJwt = passportJWT.ExtractJwt
 const JwtStrategy = passportJWT.Strategy
 
@@ -38,7 +40,7 @@ app.use(bodyParser.json())
 
 app.use('/', Router)
 
-app.listen(8082, () => {
+app.listen(SERVICE_PORT, () => {
 	if (__DEV__) {
 		console.log("Express running");
 	}

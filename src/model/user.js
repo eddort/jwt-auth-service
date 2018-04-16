@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { model } from 'mongoose-decorators'
 import Joi from 'joi'
 
-export const usernameShema =	
+export const usernameShema =
 	Joi.string()
 		.min(3)
 		.max(24)
@@ -36,7 +36,11 @@ const {
 		type: String,
 		required: true
 	},
-	salt: String
+	salt: String,
+	dateCreate: {
+		type: Date,
+		default: Date.now
+	}
 }, {
 	autoIndex: MONGO_USE_AUTO_INDEX
 })
