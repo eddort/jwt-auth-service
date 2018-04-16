@@ -1,0 +1,30 @@
+{
+  "name": "jwt-auth-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "backpack",
+    "build": "backpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eddort/jwt-auth-service.git"
+  },
+  "author": "Eddort",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Eddort/jwt-auth-service/issues"
+  },
+  "homepage": "https://github.com/Eddort/jwt-auth-service#readme",
+  "dependencies": {
+    "backpack-core": "^0.7.0",
+    "dotenv": "^5.0.1",
+    "mongoose": "^5.0.14",
+    "mongoose-class-wrapper": "^0.9.0",
+    "mongoose-decorators": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel-preset-stage-0": "^6.24.1"
+  }
+}
