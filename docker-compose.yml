@@ -8,11 +8,20 @@ services:
       - "8082:8082"
     depends_on:
       - mongo
+    environment:
+      MONGODB_USER: "admin"
+      MONGODB_DATABASE: "auth"
+      MONGODB_PASS: "123"
+      MONGO_PORT: "27017"
   mongo:
     command: mongod
     image: mongo:latest
     ports:
       - "27100:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123
+      - MONGO_INITDB_DATABASE=auth
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     logging:

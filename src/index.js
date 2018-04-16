@@ -1,3 +1,4 @@
-import { connect } from './db'
-connect()
+import 'dotenv/config'
+import './db'
+
 console.log("INITIAL")

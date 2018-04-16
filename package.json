@@ -5,7 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "dev": "backpack",
-    "build": "backpack build"
+    "build": "backpack build",
+    "start": "node build/main.js"
   },
   "repository": {
     "type": "git",
