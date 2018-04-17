@@ -7,12 +7,13 @@ services:
       context: ./
       dockerfile: Dockerfile.dev
     ports:
-      - "8082:8082"
+      - "8089:8089"
     environment:
       MONGODB_USER: "admin"
       MONGODB_DATABASE: "auth"
       MONGODB_PASS: "123"
       MONGO_PORT: "27017"
+      SERVICE_PORT: "8089"
     depends_on:
       - mongo
   mongo:

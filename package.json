@@ -2,7 +2,7 @@
   "name": "jwt-auth-service",
   "version": "1.0.0",
   "description": "",
-  "main": "build/index.js",
+  "main": "build/main.js",
   "scripts": {
     "dev": "backpack",
     "build": "backpack build",
