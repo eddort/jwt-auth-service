@@ -21,8 +21,10 @@
   "dependencies": {
     "backpack-core": "^0.7.0",
     "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
+    "http-proxy": "^1.16.2",
     "joi": "^13.1.2",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.0.14",
