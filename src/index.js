@@ -40,8 +40,15 @@ app.use(bodyParser.json())
 
 app.use('/', Router)
 
+app.use((err, req, res, next) => {
+	if (err) {
+		res.status(500).send("Omae wa shindeiru")
+	}
+})
 app.listen(SERVICE_PORT, () => {
 	if (__DEV__) {
 		console.log("Express running");
 	}
 })
+process.on('uncaughtException', err => console.log(err.stack));
+process.on('UnhandledPromiseRejection', err => console.log(err.stack))

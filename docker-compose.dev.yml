@@ -20,7 +20,7 @@ services:
     command: mongod
     image: mongo:latest
     ports:
-      - "27100:27017"
+      - "27101:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=123

@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import { model } from 'mongoose-decorators'
 import Joi from 'joi'
+import { AuthError, RegisterError } from '../errors'
 
 export const usernameShema =
 	Joi.string()
@@ -49,8 +50,11 @@ export default class User {
 		return this.hashedPassword
 	}
 	set password(password) {
-		if (! Joi.validate(password, passwordShema)) {
-			return new Error('Password not valid')
+		if (! Joi.validate(password, passwordShema).error) {
+			if (__DEV__) {
+				console.error(Joi.validate(password, passwordShema).error)
+			}
+			return new RegisterError('Password not valid')
 		}
 		this.salt = crypto.randomBytes(128).toString('base64')
 		this.hashedPassword = crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1').toString('hex')
@@ -60,13 +64,13 @@ export default class User {
 	}
 	static async findUserAndCheckPswd(authInfo) {
 		if (this.validateAuthInfo(authInfo)) {
-			return new Error('authInfo error')
+			return new AuthError('authInfo error')
 		}
 		
 		const user = await this.findForAuth(authInfo)
 		
-		if (! user.checkPassword(authInfo)) {
-			throw new Error('Password not valid')
+		if (! user || ! user.checkPassword(authInfo)) {
+			throw new AuthError('Password not valid')
 		}
 		return user
 	}
@@ -83,7 +87,7 @@ export default class User {
 		let User = this;
 		const userIsExist = await User.checkUserExist(username)
 		if (userIsExist) {
-			return new Error('User is exist')
+			return new RegisterError('User is exist')
 		}
 		const user = new User({ username, password })
 		return user.save()
