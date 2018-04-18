@@ -52,16 +52,20 @@ root.use('/auth', $)
 
 if (WHITE_URL) {
 	root.get(`${WHITE_URL}*`, (req, res) => {
-		apiProxy.web(req, res, { target: SUCESS_PROXY_URL })
+		delete req.headers.host;
+		apiProxy.web(req, res, { target: SUCESS_PROXY_URL + req.originalUrl, ignorePath: true  }, err => {
+			console.error(err)
+		})
 	})
 }
 
 root.use(ROUTE_JWT_AUTH_ACCESS, handleAsyncError(async (req, res) => {
 	passport.authenticate('jwt', { session: false }, (err, { _id }) => {
 		if (_id) {
-			apiProxy.web(req, res, { target: SUCESS_PROXY_URL, headers: {
-				'target-user': _id
-			}})
+			delete req.headers.host;
+			apiProxy.web(req, res, { target: SUCESS_PROXY_URL + req.originalUrl, headers: { 'target-user': _id }, ignorePath: true }, err => {
+				console.error(err)
+			})
 		} else {
 			res.redirect(FAIL_REDIRECT_URL)
 		}
