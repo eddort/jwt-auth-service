@@ -1,13 +1,13 @@
 version: '2'
 services:
   jwt-auth:
+    volumes:
+      - ".:/app:rw"
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8089:8089"
-    depends_on:
-      - mongo
     environment:
       MONGODB_USER: "admin"
       MONGODB_DATABASE: "auth"
@@ -15,12 +15,15 @@ services:
       MONGO_PORT: "27017"
       SERVICE_PORT: "8089"
       FAIL_REDIRECT_URL: http://localhost:8089/login
-      SUCESS_REDIRECT_URL: http://localhost:3332
+      SUCESS_PROXY_URL: http://localhost:3332
+      WHITE_URL: "/auth"
+    depends_on:
+      - mongo
   mongo:
     command: mongod
     image: mongo:latest
     ports:
-      - "27100:27017"
+      - "27101:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=123

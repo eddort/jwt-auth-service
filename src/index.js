@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
 import Router from './routes'
-
+import morgan from 'morgan'
 import strategy from './strategy'
 
 const { SERVICE_PORT } = process.env
@@ -20,11 +20,10 @@ app.use(passport.initialize())
 app.use(bodyParser.urlencoded({
 	extended: true
 }))
-
+app.use(morgan('combined'))
 app.use(bodyParser.json())
 
 app.use(cookieParser())
-
 app.use('/', Router)
 
 app.use((err, req, res, next) => {

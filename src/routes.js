@@ -12,11 +12,12 @@ const root = express.Router()
 const $ = express.Router()
 
 const {
-	SUCESS_REDIRECT_URL = 'http://google.com',
-	FAIL_REDIRECT_URL = 'http://ya.ru',
+	SUCESS_PROXY_URL,
+	FAIL_REDIRECT_URL,
 	JWT_TOKEN_EXPIRES_IN = '1h',
-	ROUTE_JWT_AUTH_ACCESS = '/',
-	JWT_SECRET = 'secret'
+	ROUTE_JWT_AUTH_ACCESS = '*',
+	JWT_SECRET = 'secret',
+	WHITE_URL = false
 } = process.env
 
 $.post('/register', handleAsyncError(async (req, res) => {
@@ -31,7 +32,9 @@ $.post('/register', handleAsyncError(async (req, res) => {
 	});
 	res.json({message: "ok", token})
 }))
-$.get('/test', (req, res) => res.send('ok'))
+
+$.get('/ok', (req, res) => res.send('ok'))
+
 $.post('/login', handleAsyncError(async (req, res) => {
 	if (Joi.validate(req.body, authSchema).error) {
 		return res.status(401).json({ error: "Auth error" })
@@ -47,14 +50,20 @@ $.post('/login', handleAsyncError(async (req, res) => {
 
 root.use('/auth', $)
 
+if (WHITE_URL) {
+	root.get(`${WHITE_URL}*`, (req, res) => {
+		apiProxy.web(req, res, { target: SUCESS_PROXY_URL })
+	})
+}
+
 root.use(ROUTE_JWT_AUTH_ACCESS, handleAsyncError(async (req, res) => {
 	passport.authenticate('jwt', { session: false }, (err, { _id }) => {
 		if (_id) {
-			apiProxy.web(req, res, { target: `${SUCESS_REDIRECT_URL}${req.url}`, headers: {
+			apiProxy.web(req, res, { target: SUCESS_PROXY_URL, headers: {
 				'target-user': _id
 			}})
 		} else {
-			apiProxy.web(req, res, { target: `${SUCESS_REDIRECT_URL}/auth/login` })
+			res.redirect(FAIL_REDIRECT_URL)
 		}
 	})(req, res);
 }))
