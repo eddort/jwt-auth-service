@@ -8,7 +8,7 @@ import passport from 'passport'
 import Router from './routes'
 import morgan from 'morgan'
 import strategy from './strategy'
-
+import { ServiceError } from './errors'
 const { SERVICE_PORT } = process.env
 
 passport.use(strategy)
@@ -28,8 +28,12 @@ app.use('/', Router)
 
 app.use((err, req, res, next) => {
 	if (err) {
-		if (__DEV__) console.error(err);
-		res.status(500).send("Omae wa shindeiru")
+		console.error(err);
+		if (err instanceof ServiceError) {
+			res.json({message: err.message})
+		} else {
+			res.status(500).send("Omae wa shindeiru")
+		}
 	}
 })
 

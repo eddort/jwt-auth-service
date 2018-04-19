@@ -50,11 +50,11 @@ export default class User {
 		return this.hashedPassword
 	}
 	set password(password) {
-		if (! Joi.validate(password, passwordShema).error) {
+		if (Joi.validate(password, passwordShema).error) {
 			if (__DEV__) {
 				console.error(Joi.validate(password, passwordShema).error)
 			}
-			return new RegisterError('Password not valid')
+			throw new RegisterError('Password not valid')
 		}
 		this.salt = crypto.randomBytes(128).toString('base64')
 		this.hashedPassword = crypto.pbkdf2Sync(password, this.salt, 1, 128, 'sha1').toString('hex')
@@ -64,7 +64,7 @@ export default class User {
 	}
 	static async findUserAndCheckPswd(authInfo) {
 		if (this.validateAuthInfo(authInfo)) {
-			return new AuthError('authInfo error')
+			throw new AuthError('authInfo error')
 		}
 		
 		const user = await this.findForAuth(authInfo)
@@ -87,7 +87,7 @@ export default class User {
 		let User = this;
 		const userIsExist = await User.checkUserExist(username)
 		if (userIsExist) {
-			return new RegisterError('User is exist')
+			throw new RegisterError('User is exist')
 		}
 		const user = new User({ username, password })
 		return user.save()

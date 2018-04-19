@@ -60,6 +60,11 @@ if (WHITE_URL) {
 }
 
 root.use(ROUTE_JWT_AUTH_ACCESS, handleAsyncError(async (req, res) => {
+	if (__DEV__) {
+		if (req.originalUrl === '/favicon.ico') {
+			return
+		}
+	}
 	passport.authenticate('jwt', { session: false }, (err, { _id }) => {
 		if (_id) {
 			delete req.headers.host;
