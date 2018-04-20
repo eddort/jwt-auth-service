@@ -13,10 +13,14 @@ export default new JwtStrategy({
 	},
 	secretOrKey: 'secret'
 }, async ({ id }, next) => {
-	const user = await User.findOne({ _id: id }, { _id: 1 })
-	if (user) {
-		next(null, user)
-	} else {
-		next(null, false)
+	try {
+		const user = await User.findOne({ _id: id }, { _id: 1 })
+		if (user) {
+			next(null, user)
+		} else {
+			next(null, false)
+		}
+	} catch (e) {
+		next(e)
 	}
 });

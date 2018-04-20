@@ -53,19 +53,23 @@ root.use('/auth', $)
 if (WHITE_URL) {
 	root.get(`${WHITE_URL}*`, (req, res) => {
 		delete req.headers.host;
-		apiProxy.web(req, res, { target: SUCESS_PROXY_URL + req.originalUrl, ignorePath: true  }, err => {
+		apiProxy.web(req, res, { target: SUCESS_PROXY_URL + req.originalUrl, headers: {}, ignorePath: true  }, err => {
 			console.error(err)
 		})
 	})
 }
 
 root.use(ROUTE_JWT_AUTH_ACCESS, handleAsyncError(async (req, res) => {
-	if (__DEV__) {
-		if (req.originalUrl === '/favicon.ico') {
-			return
-		}
+	
+	if (req.originalUrl === '/favicon.ico') {
+		return res.redirect(SUCESS_PROXY_URL + req.originalUrl)
 	}
+	
 	passport.authenticate('jwt', { session: false }, (err, { _id }) => {
+		if (err) {
+			console.error(err)
+			return res.status(500).json({ message: err.message })
+		}
 		if (_id) {
 			delete req.headers.host;
 			apiProxy.web(req, res, { target: SUCESS_PROXY_URL + req.originalUrl, headers: { 'target-user': _id }, ignorePath: true }, err => {
