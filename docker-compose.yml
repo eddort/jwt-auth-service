@@ -17,6 +17,7 @@ services:
       FAIL_REDIRECT_URL: http://localhost:8089/login
       SUCESS_PROXY_URL: http://localhost:3332
       WHITE_URL: "/auth"
+      MONGO_HOST: "mongo"
     depends_on:
       - mongo
   mongo:
